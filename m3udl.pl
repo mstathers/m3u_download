@@ -20,7 +20,7 @@ sub usage {
 }
 
 # Check for proper arguments (directory)
-sub getArgs {
+sub get_args {
     # Do we have an argument?
     if (! $ARGV[0]) {
         return 0;
@@ -41,15 +41,33 @@ sub getArgs {
 
 # Get name of download dir as well as root path in url.
 sub split_m3u {
+    # get download directory
+    my $last_part_url = (split /\//, $m3u_url)[-1];
+    $last_part_url =~ /(\S+)?(?:\.m3u)/;
+    $download_dir = $1;
+
+    # TODO get root URL
+}
+
+# check if we can create destination dir
+sub destination_check{
+    # TODO
 }
 
 # download m3u file from $m3u_url
 sub download_m3u {
+    # TODO
 }
 
 sub main {
-    if (!&getArgs()){
+    # check arguments
+    if (!&get_args()) {
         &usage();
+        return 0;
+    }
+
+    # split the m3u url up into required bits.
+    if (!&split_m3u()) {
         return 0;
     }
 }
