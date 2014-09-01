@@ -4,9 +4,8 @@
 
 use warnings;
 use strict;
-#use LWP::UserAgent;
+use LWP::UserAgent;
 
-#my $ua = LWP::UserAgent->new;
 my $m3u_url;
 my $root_url;
 my $download_dir;
@@ -42,21 +41,15 @@ sub get_args {
 # Get name of download dir as well as root path in url.
 sub split_m3u {
     # get download directory
-    my $last_part_url = (split /\//, $m3u_url)[-1];
-    $last_part_url =~ /(\S+)?(?:\.m3u)/;
-    $download_dir = $1;
+    my ($download_dir) = $m3u_url =~ /^http\S+\/(\S+)\.m3u$/;
 
-    # TODO get root URL
-}
-
-# check if we can create destination dir
-sub destination_check{
-    # TODO
+    # Get root URL
+    my ($root_url) = $m3u_url =~ /^(http\S+\/)\S+\.m3u$/;
 }
 
 # download m3u file from $m3u_url
 sub download_m3u {
-    # TODO
+    #my $ua = LWP::UserAgent->new;
 }
 
 sub main {
