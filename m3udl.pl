@@ -15,7 +15,7 @@ my @song_list;
 
 sub usage {
     print "$0 will take a m3u URL as an argument and download the music files listed in\n";
-    print "the m3u playlist to an aptly named directory in the current working directory\n";
+    print "the m3u playlist to an aptly named directory in the current working directory.\n";
     print "\n";
     print "Usage: $0 <URL>\n";
     print "\tURL    The URL for the m3u file.\n\n";
@@ -66,13 +66,16 @@ sub download_m3u {
 
 # Download each file 
 sub download_files {
+    print "Downloading...\n";
     foreach my $song (@song_list) {
+        # file save path
         my $save = "$download_dir/$song";
+        # url encoding
         my $encoded_song = uri_encode($song);
+        # full url
         my $url = $root_url . $encoded_song;
 
-#        print "$save\n";
-#        print "$url\n";
+        print "$song\n";
         getstore($url,$save);
     }
 }
@@ -102,9 +105,6 @@ sub main {
 
 
     &download_files();
-
-
-    return 1;
 }
 
 &main();
