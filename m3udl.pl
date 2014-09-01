@@ -5,6 +5,7 @@
 use warnings;
 use strict;
 use LWP::UserAgent;
+use LWP::Simple qw(getstore);
 use URI::Encode qw(uri_encode uri_decode);
 
 my $m3u_url;
@@ -47,7 +48,7 @@ sub split_m3u {
     $download_dir = uri_decode($download_dir_html);
 
     # Get root URL
-    my ($root_url) = $m3u_url =~ /^(http\S+\/)\S+\.m3u$/;
+    ($root_url) = $m3u_url =~ /^(http\S+\/)\S+\.m3u$/;
 }
 
 # download m3u file from $m3u_url
@@ -63,6 +64,19 @@ sub download_m3u {
     return $response->decoded_content;
 }
 
+# Download each file 
+sub download_files {
+    foreach my $song (@song_list) {
+        my $save = "$download_dir/$song";
+        my $encoded_song = uri_encode($song);
+        my $url = $root_url . $encoded_song;
+
+#        print "$save\n";
+#        print "$url\n";
+        getstore($url,$save);
+    }
+}
+
 
 sub main {
     # check arguments
@@ -76,22 +90,19 @@ sub main {
         return 0;
     }
 
-    @song_list = &download_m3u;
-    if (!@song_list) {
+    # download songlist
+    my $song_list = &download_m3u;
+    if (!$song_list) {
         return 0;
     }
-
+    @song_list = split "\n", $song_list;
 
     # Create the destination directory.
-    #if (! mkdir($download_dir)) {
-    #    print "ERROR: $!";
-    #    return 0;
-    #}
+    mkdir($download_dir);
 
 
-    foreach (@song_list) {
-        print "$_";
-    }
+    &download_files();
+
 
     return 1;
 }
